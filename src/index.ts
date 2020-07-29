@@ -31,11 +31,6 @@ interface TGSJob {
     description: string
 }
 
-//partial interface
-interface TGSInstance {
-    softShutdown: boolean
-}
-
 (async () => {
     let tgstoken: string;
 
@@ -88,31 +83,31 @@ interface TGSInstance {
                 console.error("Error while starting instance", e)
                 process.exit(1);
             }
-            break;
-        }
-        case Mode.Stop: {
-            console.log(`Fetching instance info`)
+            console.log(`Unsetting graceful shutdown`);
             try {
-                const response: TGSInstance = ((await instance.get("/DreamDaemon", {
+                await instance.post("/DreamDaemon", {softShutdown: false}, {
                     headers: {
                         instance: tgsid
                     }
-                })).data);
-                console.log(`Setting graceful shutdown`);
-                response.softShutdown = true;
-                try {
-                    await instance.post("/DreamDaemon", {softShutdown: true}, {
-                        headers: {
-                            instance: tgsid
-                        }
-                    });
-                    console.log(`Graceful shutdown set`)
-                } catch(e) {
-                    console.error("Error while setting graceful shutdown", e)
-                    process.exit(1);
-                }
+                });
+                console.log(`Graceful shutdown unset`)
             } catch(e) {
-                console.error("Error while fetching instance", e)
+                console.error("Error while unsetting graceful shutdown", e)
+                process.exit(1);
+            }
+            break;
+        }
+        case Mode.Stop: {
+            console.log(`Setting graceful shutdown`);
+            try {
+                await instance.post("/DreamDaemon", {softShutdown: true}, {
+                    headers: {
+                        instance: tgsid
+                    }
+                });
+                console.log(`Graceful shutdown set`)
+            } catch(e) {
+                console.error("Error while setting graceful shutdown", e)
                 process.exit(1);
             }
             break;

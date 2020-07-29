@@ -56,7 +56,7 @@ console.log("TGS User: " + tgsusr);
 console.log("TGS Instance: " + tgsid);
 console.log("TGS Action: " + tgsmode);
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var tgstoken, instance, response, e_1, _a, response, e_2, response, e_3, e_4;
+    var tgstoken, instance, response, e_1, _a, response, e_2, e_3, e_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -103,7 +103,7 @@ console.log("TGS Action: " + tgsmode);
                 _a = tgsmode;
                 switch (_a) {
                     case Mode.Start: return [3 /*break*/, 5];
-                    case Mode.Stop: return [3 /*break*/, 10];
+                    case Mode.Stop: return [3 /*break*/, 14];
                 }
                 return [3 /*break*/, 19];
             case 5:
@@ -125,42 +125,43 @@ console.log("TGS Action: " + tgsmode);
                 console.error("Error while starting instance", e_2);
                 process.exit(1);
                 return [3 /*break*/, 9];
-            case 9: return [3 /*break*/, 20];
+            case 9:
+                console.log("Unsetting graceful shutdown");
+                _b.label = 10;
             case 10:
-                console.log("Fetching instance info");
-                _b.label = 11;
-            case 11:
-                _b.trys.push([11, 17, , 18]);
-                return [4 /*yield*/, instance.get("/DreamDaemon", {
+                _b.trys.push([10, 12, , 13]);
+                return [4 /*yield*/, instance.post("/DreamDaemon", { softShutdown: false }, {
                         headers: {
                             instance: tgsid
                         }
                     })];
+            case 11:
+                _b.sent();
+                console.log("Graceful shutdown unset");
+                return [3 /*break*/, 13];
             case 12:
-                response = ((_b.sent()).data);
+                e_3 = _b.sent();
+                console.error("Error while unsetting graceful shutdown", e_3);
+                process.exit(1);
+                return [3 /*break*/, 13];
+            case 13: return [3 /*break*/, 20];
+            case 14:
                 console.log("Setting graceful shutdown");
-                response.softShutdown = true;
-                _b.label = 13;
-            case 13:
-                _b.trys.push([13, 15, , 16]);
+                _b.label = 15;
+            case 15:
+                _b.trys.push([15, 17, , 18]);
                 return [4 /*yield*/, instance.post("/DreamDaemon", { softShutdown: true }, {
                         headers: {
                             instance: tgsid
                         }
                     })];
-            case 14:
+            case 16:
                 _b.sent();
                 console.log("Graceful shutdown set");
-                return [3 /*break*/, 16];
-            case 15:
-                e_3 = _b.sent();
-                console.error("Error while setting graceful shutdown", e_3);
-                process.exit(1);
-                return [3 /*break*/, 16];
-            case 16: return [3 /*break*/, 18];
+                return [3 /*break*/, 18];
             case 17:
                 e_4 = _b.sent();
-                console.error("Error while fetching instance", e_4);
+                console.error("Error while setting graceful shutdown", e_4);
                 process.exit(1);
                 return [3 /*break*/, 18];
             case 18: return [3 /*break*/, 20];
