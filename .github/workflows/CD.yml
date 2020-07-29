@@ -1,0 +1,32 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Publish Docker
+        uses: elgohr/Publish-Docker-Github-Action@2.12
+        with:
+          name: yogstation13/byondver/byondver
+          username: ${{secrets.DOCKER_PUSH_USERNAME}}
+          password: ${{secrets.DOCKER_PUSH_PASSWORD}}
+          registry: docker.pkg.github.com
+          tags: ${{github.sha}}
+      - name: Deploy Start
+        uses: steebchen/kubectl@v1.0.0
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: set image --namespace yogstation-services cronjob/atlasstart byondver=docker.pkg.github.com/yogstation13/atlasschedule/atlasschedule:${{github.sha}}
+      - name: Deploy Stop
+      uses: steebchen/kubectl@v1.0.0
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      with:
+        args: set image --namespace yogstation-services cronjob/atlasstop byondver=docker.pkg.github.com/yogstation13/atlasschedule/atlasschedule:${{github.sha}}
