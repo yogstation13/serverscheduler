@@ -13,7 +13,7 @@ jobs:
       - name: Publish Docker
         uses: elgohr/Publish-Docker-Github-Action@2.12
         with:
-          name: yogstation13/byondver/byondver
+          name: yogstation13/serverscheduler/serverscheduler
           username: ${{secrets.DOCKER_PUSH_USERNAME}}
           password: ${{secrets.DOCKER_PUSH_PASSWORD}}
           registry: docker.pkg.github.com
