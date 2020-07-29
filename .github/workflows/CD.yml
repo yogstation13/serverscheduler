@@ -25,8 +25,8 @@ jobs:
         with:
           args: set image --namespace yogstation-services cronjob/atlasstart byondver=docker.pkg.github.com/yogstation13/atlasschedule/atlasschedule:${{github.sha}}
       - name: Deploy Stop
-      uses: steebchen/kubectl@v1.0.0
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      with:
-        args: set image --namespace yogstation-services cronjob/atlasstop byondver=docker.pkg.github.com/yogstation13/atlasschedule/atlasschedule:${{github.sha}}
+        uses: steebchen/kubectl@v1.0.0
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: set image --namespace yogstation-services cronjob/atlasstop byondver=docker.pkg.github.com/yogstation13/atlasschedule/atlasschedule:${{github.sha}}
